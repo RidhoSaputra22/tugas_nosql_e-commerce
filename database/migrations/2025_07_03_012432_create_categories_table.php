@@ -6,15 +6,21 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
-        Schema::connection('mongodb')->create('recomendations', function ($collection) {
-            $collection->index('user_id');
+        Schema::connection('mongodb')->create('category', function ($collection) {
+            $collection->index('name');
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::connection('mongodb')->drop('recomendations');
+        Schema::connection('mongodb')->drop('category');
     }
 };

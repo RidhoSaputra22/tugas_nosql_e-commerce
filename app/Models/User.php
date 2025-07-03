@@ -15,13 +15,13 @@ class User extends Authenticatable
         'password',
         'wishlist',
         'liked_products',
-        'address'
+        'address',
+        'image'
     ];
 
     protected $casts = [
         'wishlist' => 'array',
         'liked_products' => 'array',
-        'address' => 'array',
     ];
 
     public function orders()

@@ -21,14 +21,7 @@ class OrderSeeder extends Seeder
 
         Order::create([
             'user_id' => $user->_id,
-            'items' => [
-                [
-                    'product_id' => $product->_id,
-                    'name' => $product->name,
-                    'price' => $product->price,
-                    'quantity' => 2
-                ]
-            ],
+            'items' => [],
             'total_price' => $product->price * 2,
             'status' => 'paid',
             'payment_method' => 'credit_card',

@@ -21,6 +21,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('admin'),
             'wishlist' => [],
             'liked_products' => [],
+            'role' => 'admin',
             'address' => [
                 'street' => 'Jl. Sudirman',
                 'city' => 'Jakarta',

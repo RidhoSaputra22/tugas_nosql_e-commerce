@@ -37,10 +37,11 @@ class UserResource extends Resource
                     ->avatar(),
                 Forms\Components\TextInput::make('name')
                     ->required(),
-                Forms\Components\TextInput::make('address')
-                    ->readOnly(),
                 Forms\Components\TextInput::make('email')
                     ->email()
+                    ->required(),
+                Forms\Components\KeyValue::make('address')
+                    ->columnSpanFull()
                     ->required(),
             ]);
     }
@@ -49,6 +50,8 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('image')
+                    ->circular(),
                 Tables\Columns\TextColumn::make('id')
                     ->label('ID'),
                 Tables\Columns\TextColumn::make('address')

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::connection('mongodb')->create('category', function ($collection) {
+        Schema::connection('mongodb')->create('categories', function ($collection) {
             $collection->index('name');
         });
     }
@@ -21,6 +21,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::connection('mongodb')->drop('category');
+        Schema::connection('mongodb')->drop('categories');
     }
 };

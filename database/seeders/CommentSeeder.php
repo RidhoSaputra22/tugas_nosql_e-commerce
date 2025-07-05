@@ -17,11 +17,9 @@ class CommentSeeder extends Seeder
     {
         //
         $user = User::first();
-        $product = Product::first();
 
         Comment::create([
             'user_id' => $user->_id,
-            'product_id' => $product->_id,
             'content' => 'These shoes are awesome!'
         ]);
     }

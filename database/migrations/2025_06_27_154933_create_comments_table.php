@@ -9,7 +9,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::connection('mongodb')->create('comments', function ($collection) {
-            $collection->index('product_id');
             $collection->index('user_id');
             $collection->index('content');
             $collection->index('created_at');

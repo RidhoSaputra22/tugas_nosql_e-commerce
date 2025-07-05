@@ -2,23 +2,25 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
+use App\Livewire\Auth\Login;
+use App\Livewire\Auth\Register;
+use App\Livewire\HomePage;
+use App\Livewire\Product\DetailProduct;
+use App\Livewire\Product\ShowProduct;
+use App\Livewire\Transaction\Cart;
+use App\Models\Product;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/', HomePage::class)->name('home');
 
 
-Route::get('/', [HomeController::class, 'index']);
-Route::get('/shop', [HomeController::class, 'shop']);
-Route::get('/detail/{id}', [HomeController::class, 'detail']);
+Route::get('/shop', [HomeController::class, 'shop'])->name('shop');
+Route::get('/detail/{id}', DetailProduct::class)->name('detail');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/cart', [HomeController::class, 'cart']);
-    Route::get('/checkout', [HomeController::class, 'checkout']);
-    Route::get('/getToken', [HomeController::class, 'getToken']);
-    Route::get('/riwayat', [HomeController::class, 'riwayat']);
-    Route::get('/addToCart/{id}', [HomeController::class, 'addToCart']);
-    Route::get('/addFormCart/{id}', [HomeController::class, 'addFormCart']);
-    Route::get('/DelFormCart/{id}', [HomeController::class, 'DelFormCart']);
-    Route::get('/DestroyFormCart/{id}', [HomeController::class, 'DestroyFormCart']);
+    Route::get('/cart', Cart::class)->name('cart');
 });
 
 
@@ -26,11 +28,16 @@ Route::middleware('auth')->group(function () {
 
 // AUTH
 
-Route::get('/login', [AuthController::class, 'login'])->name('login');
-Route::post('/userLogin', [AuthController::class, 'userLogin'])->name('user.login');
-Route::post('/userRegist', [AuthController::class, 'userRegist'])->name('user.regist');
-Route::get('/regist', [AuthController::class, 'regist']);
-Route::get('/logout', [AuthController::class, 'logout']);
+Route::get('/login', Login::class)->name('login');
+Route::get('/regist', Register::class)->name('user.regist');
+Route::get(
+    '/logout',
+    function () {
+        Auth::logout();
+        session()->flush();
+        return redirect('/login');
+    }
+)->name('user.logout');
 
 
 // END-AUTH

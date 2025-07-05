@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use Closure;
 use App\Filament\Resources\OrderResource\Pages;
 use App\Filament\Resources\OrderResource\RelationManagers;
 use App\Models\Order;
@@ -34,7 +35,6 @@ class OrderResource extends Resource
 
     public static function form(Form $form): Form
     {
-
         return $form
             ->schema([
                 Forms\Components\Select::make('user')
@@ -61,11 +61,14 @@ class OrderResource extends Resource
                 Forms\Components\TextInput::make('total_price')
                     ->prefix('Rp. ')
                     ->numeric()
-                    ->polled()
+                    ->live(
+                        $onBlur = true,
+                    )
                     ->readOnly(),
                 Forms\Components\KeyValue::make('shipping_address')
                     ->columnSpanFull(),
                 Forms\Components\Repeater::make('items')
+                    ->columns(3)
                     ->columnSpanFull()
                     ->schema([
                         Forms\Components\Select::make('product_id')
@@ -74,15 +77,17 @@ class OrderResource extends Resource
                             ->afterStateUpdated(fn(Get $get, Set $set) => $set('price', Product::find($get('product_id'))->price))
                             ->required()
                             ->live(),
-                        Forms\Components\TextInput::make('price')
-                            ->live(),
+
                         Forms\Components\TextInput::make('quantity')
                             ->afterStateUpdated(function (Get $get, Set $set) {
-                                Order::find($get('../../id'))->updateTotalPrice();
+                                $set('total_price', $get('price') * $get('quantity'));
                             })
                             ->numeric()
-                            ->required()
+                            ->required(),
+                        Forms\Components\TextInput::make('price')
                             ->live(),
+                        Forms\Components\TextInput::make('total_price')
+                            ->prefix('Rp. '),
                     ]),
             ])->columns(3);
     }
@@ -126,7 +131,10 @@ class OrderResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                // make filters date
+
+
+
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

@@ -1,15 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
+use Illuminate\Support\Facades\Auth;
 use MongoDB\Laravel\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use MongoDB\Laravel\Relations\BelongsTo;
+use MongoDB\Laravel\Relations\HasMany;
 
 class Product extends Model
 {
-    /** @use HasFactory<\Database\Factories\ProductFactory> */
-    use HasFactory;
-
     protected $connection = 'mongodb';
     protected $collection = 'products';
 
@@ -18,21 +19,29 @@ class Product extends Model
         'description',
         'price',
         'stock',
-        'category',
-        'tags',
+        'category_id',
         'images',
-        'ratings',
-        'like_count'
+        'like_count',
+        'comments',
     ];
 
     protected $casts = [
-        'tags' => 'array',
         'images' => 'array',
-        'ratings' => 'array',
+        'comments' => 'array',
     ];
 
-    public function comments()
+    public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class, 'category_id', 'id');
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

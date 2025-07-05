@@ -7,6 +7,8 @@ use App\Filament\Resources\ProductResource\RelationManagers;
 use App\Models\Product;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -35,22 +37,40 @@ class ProductResource extends Resource
                     ->multiple()
                     ->image()
                     ->maxFiles(5)
-                    ->columnSpan(2)
+                    ->columnSpanFull()
                     ->required(),
-                Forms\Components\KeyValue::make('tags'),
-                Forms\Components\KeyValue::make('ratings'),
-
-                Forms\Components\TextInput::make('category'),
-                Forms\Components\TextInput::make('description'),
+                Forms\Components\Select::make('category_id')
+                    ->relationship('category', 'name')
+                    ->native(false)
+                    ->required(),
+                Forms\Components\TextInput::make('description')
+                    ->required(),
                 Forms\Components\TextInput::make('like_count')
-                    ->numeric(),
-                Forms\Components\TextInput::make('name'),
+                    ->numeric()
+                    ->required(),
+                Forms\Components\TextInput::make('name')
+                    ->required(),
                 Forms\Components\TextInput::make('price')
                     ->numeric()
-                    ->prefix('Rp. '),
+                    ->prefix('Rp. ')
+                    ->required(),
                 Forms\Components\TextInput::make('stock')
-                    ->numeric(),
-            ]);
+                    ->numeric()
+                    ->required(),
+                Forms\Components\Repeater::make('comments')
+                    ->schema([
+                        Forms\Components\Select::make('user_id')
+                            ->relationship('user', 'name')
+                            ->native(false)
+                            ->required(),
+                        Forms\Components\TextInput::make('content')
+                            ->columnSpan(2)
+                            ->required(),
+                    ])
+                    ->columns(3)
+                    ->columnSpanFull()
+                    ->addActionAlignment('left'),
+            ])->columns(3);
     }
 
     public static function table(Table $table): Table
@@ -59,25 +79,22 @@ class ProductResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id')
                     ->label('ID'),
-                Tables\Columns\TextColumn::make('category')
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('category.name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('description')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('images'),
                 Tables\Columns\TextColumn::make('like_count')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('price')
                     ->prefix('Rp. ')
                     ->money()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('ratings'),
                 Tables\Columns\TextColumn::make('stock')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('tags'),
             ])
             ->filters([
                 //

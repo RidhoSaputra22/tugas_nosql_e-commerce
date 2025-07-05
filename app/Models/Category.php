@@ -3,7 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use MongoDB\Laravel\Eloquent\Model;
+use MongoDB\Laravel\Relations\HasMany;
 
 class Category extends Model
 {
@@ -11,13 +12,13 @@ class Category extends Model
     use HasFactory;
 
     protected $connection = 'mongodb';
-    protected $collection = 'category';
+    protected $collection = 'categories';
 
     protected $fillable = [
         'name',
     ];
 
-    public function products()
+    public function products(): HasMany
     {
         return $this->hasMany(Product::class);
     }
